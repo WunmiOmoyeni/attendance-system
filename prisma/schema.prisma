@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,15 +8,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      Role     @default(EMPLOYEE)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  location   Location? @relation(fields: [locationId], references: [id])
+  id         String    @id @default(cuid())
+  name       String
+  email      String    @unique
+  role       Role      @default(EMPLOYEE)
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
   locationId String?
+  location   Location? @relation(fields: [locationId], references: [id])
 }
 
 model Location {
@@ -32,8 +26,7 @@ model Location {
   longitude Float
   radius    Int
   createdAt DateTime @default(now())
-
-  users User[]
+  users     User[]
 }
 
 enum Role {
