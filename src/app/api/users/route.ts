@@ -1,14 +1,15 @@
 import { prisma } from "@/src/lib/prisma";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    if (!body.name || !body.email) {
+    if (!body.name || !body.email || !body.password) {
       return NextResponse.json(
         {
-          error: "Name and email are required",
+          error: "Name, email, and password are required",
         },
         { status: 400 }
       );
@@ -29,14 +30,26 @@ export async function POST(request: Request) {
       );
     }
 
+    const passwordHash = await bcrypt.hash(body.password, 10);
+
     const user = await prisma.user.create({
       data: {
         name: body.name,
         email: body.email,
+        passwordHash,
       },
     });
 
-    return NextResponse.json(user, { status: 201 });
+    return NextResponse.json(
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error(error);
 
