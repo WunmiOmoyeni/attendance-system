@@ -10,4 +10,5 @@
  */
 export type * from './models/User'
 export type * from './models/Location'
+export type * from './models/Attendance'
 export type * from './commonInputTypes'

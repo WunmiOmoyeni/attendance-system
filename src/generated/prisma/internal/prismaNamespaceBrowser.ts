@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Location: 'Location'
+  Location: 'Location',
+  Attendance: 'Attendance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -96,6 +97,22 @@ export const LocationScalarFieldEnum = {
 } as const
 
 export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
+export const AttendanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  locationId: 'locationId',
+  clockIn: 'clockIn',
+  clockOut: 'clockOut',
+  clockInLatitude: 'clockInLatitude',
+  clockInLongitude: 'clockInLongitude',
+  clockOutLatitude: 'clockOutLatitude',
+  clockOutLongitude: 'clockOutLongitude',
+  createdAt: 'createdAt'
+} as const
+
+export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
 
 
 export const SortOrder = {

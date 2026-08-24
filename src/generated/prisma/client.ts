@@ -51,3 +51,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type Location = Prisma.LocationModel
+/**
+ * Model Attendance
+ * 
+ */
+export type Attendance = Prisma.AttendanceModel

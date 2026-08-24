@@ -18,6 +18,8 @@ model User {
 
   location   Location? @relation(fields: [locationId], references: [id])
   locationId String?
+
+  attendances Attendance[]
 }
 
 model Location {
@@ -29,6 +31,29 @@ model Location {
   radius    Int
   createdAt DateTime @default(now())
   users     User[]
+
+  attendances Attendance[]
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  location      Location @relation(fields: [locationId], references: [id])
+  locationId    String
+
+  clockIn       DateTime
+  clockOut      DateTime?
+
+  clockInLatitude    Float
+  clockInLongitude   Float
+
+  clockOutLatitude   Float?
+  clockOutLongitude  Float?
+
+  createdAt DateTime @default(now())
 }
 
 enum Role {

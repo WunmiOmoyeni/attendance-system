@@ -63,3 +63,27 @@ export async function getCurrentUser() {
 
   return user;
 }
+
+export async function requireAdmin() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return {
+      user: null,
+      error: "UNAUTHENTICATED",
+    };
+  }
+
+  if (user.role !== "ADMIN") {
+    return {
+      user: null,
+      error: "FORBIDDEN",
+    };
+  }
+
+  return {
+    user,
+    error: null,
+  };
+}
+
