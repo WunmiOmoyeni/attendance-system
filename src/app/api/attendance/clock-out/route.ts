@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     if (user.role !== "EMPLOYEE") {
       return NextResponse.json(
         {
-          error: "Only employees can clock in",
+          error: "Only employees can clock out",
         },
         { status: 403 }
       );
@@ -47,34 +47,25 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
 
-    const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999);
-
-    const existingAttendance = await prisma.attendance.findFirst({
+    const attendance = await prisma.attendance.findFirst({
       where: {
         userId: user.id,
-        clockIn: {
-          gte: startOfToday,
-          lte: endOfToday,
-        },
+        clockOut: null,
+      },
+      orderBy: {
+        clockIn: "desc",
       },
     });
 
-
-
-    if (existingAttendance) {
+    if (!attendance) {
       return NextResponse.json(
         {
-          error: "You have already clocked in today",
-          clockIn: existingAttendance.clockIn,
+          error: "You are not currently clocked in",
         },
         { status: 400 }
       );
     }
-
 
     const location = await prisma.location.findUnique({
       where: {
@@ -109,26 +100,32 @@ export async function POST(request: Request) {
       );
     }
 
-    const attendance = await prisma.attendance.create({
+    const clockOut = new Date();
+
+    const updatedAttendance = await prisma.attendance.update({
+      where: {
+        id: attendance.id,
+      },
       data: {
-        userId: user.id,
-        locationId: location.id,
-        clockIn: new Date(),
-        clockInLatitude: latitude,
-        clockInLongitude: longitude,
+        clockOut,
+        clockOutLatitude: latitude,
+        clockOutLongitude: longitude,
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Clock-in successful",
-        attendance,
-        distance: Math.round(distance),
-      },
-      { status: 201 }
-    );
+    const durationMs =
+      clockOut.getTime() - attendance.clockIn.getTime();
+
+    const durationMinutes = Math.floor(durationMs / (1000 * 60));
+
+    return NextResponse.json({
+      message: "Clock-out successful",
+      attendance: updatedAttendance,
+      durationMinutes,
+      distance: Math.round(distance),
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Clock-out error:", error);
 
     return NextResponse.json(
       {
