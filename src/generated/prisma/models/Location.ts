@@ -45,6 +45,7 @@ export type LocationMinAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  isActive: boolean | null
   createdAt: Date | null
 }
 
@@ -55,6 +56,7 @@ export type LocationMaxAggregateOutputType = {
   latitude: number | null
   longitude: number | null
   radius: number | null
+  isActive: boolean | null
   createdAt: Date | null
 }
 
@@ -65,6 +67,7 @@ export type LocationCountAggregateOutputType = {
   latitude: number
   longitude: number
   radius: number
+  isActive: number
   createdAt: number
   _all: number
 }
@@ -89,6 +92,7 @@ export type LocationMinAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  isActive?: true
   createdAt?: true
 }
 
@@ -99,6 +103,7 @@ export type LocationMaxAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  isActive?: true
   createdAt?: true
 }
 
@@ -109,6 +114,7 @@ export type LocationCountAggregateInputType = {
   latitude?: true
   longitude?: true
   radius?: true
+  isActive?: true
   createdAt?: true
   _all?: true
 }
@@ -206,6 +212,7 @@ export type LocationGroupByOutputType = {
   latitude: number
   longitude: number
   radius: number
+  isActive: boolean
   createdAt: Date
   _count: LocationCountAggregateOutputType | null
   _avg: LocationAvgAggregateOutputType | null
@@ -239,6 +246,7 @@ export type LocationWhereInput = {
   latitude?: Prisma.FloatFilter<"Location"> | number
   longitude?: Prisma.FloatFilter<"Location"> | number
   radius?: Prisma.IntFilter<"Location"> | number
+  isActive?: Prisma.BoolFilter<"Location"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Location"> | Date | string
   users?: Prisma.UserListRelationFilter
   attendances?: Prisma.AttendanceListRelationFilter
@@ -251,6 +259,7 @@ export type LocationOrderByWithRelationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   attendances?: Prisma.AttendanceOrderByRelationAggregateInput
@@ -266,6 +275,7 @@ export type LocationWhereUniqueInput = Prisma.AtLeast<{
   latitude?: Prisma.FloatFilter<"Location"> | number
   longitude?: Prisma.FloatFilter<"Location"> | number
   radius?: Prisma.IntFilter<"Location"> | number
+  isActive?: Prisma.BoolFilter<"Location"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Location"> | Date | string
   users?: Prisma.UserListRelationFilter
   attendances?: Prisma.AttendanceListRelationFilter
@@ -278,6 +288,7 @@ export type LocationOrderByWithAggregationInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LocationCountOrderByAggregateInput
   _avg?: Prisma.LocationAvgOrderByAggregateInput
@@ -296,6 +307,7 @@ export type LocationScalarWhereWithAggregatesInput = {
   latitude?: Prisma.FloatWithAggregatesFilter<"Location"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Location"> | number
   radius?: Prisma.IntWithAggregatesFilter<"Location"> | number
+  isActive?: Prisma.BoolWithAggregatesFilter<"Location"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Location"> | Date | string
 }
 
@@ -306,6 +318,7 @@ export type LocationCreateInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutLocationInput
   attendances?: Prisma.AttendanceCreateNestedManyWithoutLocationInput
@@ -318,6 +331,7 @@ export type LocationUncheckedCreateInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutLocationInput
   attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutLocationInput
@@ -330,6 +344,7 @@ export type LocationUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutLocationNestedInput
   attendances?: Prisma.AttendanceUpdateManyWithoutLocationNestedInput
@@ -342,6 +357,7 @@ export type LocationUncheckedUpdateInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutLocationNestedInput
   attendances?: Prisma.AttendanceUncheckedUpdateManyWithoutLocationNestedInput
@@ -354,6 +370,7 @@ export type LocationCreateManyInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
 }
 
@@ -364,6 +381,7 @@ export type LocationUpdateManyMutationInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -374,6 +392,7 @@ export type LocationUncheckedUpdateManyInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -389,6 +408,7 @@ export type LocationCountOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -405,6 +425,7 @@ export type LocationMaxOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -415,6 +436,7 @@ export type LocationMinOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -482,6 +504,7 @@ export type LocationCreateWithoutUsersInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   attendances?: Prisma.AttendanceCreateNestedManyWithoutLocationInput
 }
@@ -493,6 +516,7 @@ export type LocationUncheckedCreateWithoutUsersInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutLocationInput
 }
@@ -520,6 +544,7 @@ export type LocationUpdateWithoutUsersInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendances?: Prisma.AttendanceUpdateManyWithoutLocationNestedInput
 }
@@ -531,6 +556,7 @@ export type LocationUncheckedUpdateWithoutUsersInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendances?: Prisma.AttendanceUncheckedUpdateManyWithoutLocationNestedInput
 }
@@ -542,6 +568,7 @@ export type LocationCreateWithoutAttendancesInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutLocationInput
 }
@@ -553,6 +580,7 @@ export type LocationUncheckedCreateWithoutAttendancesInput = {
   latitude: number
   longitude: number
   radius: number
+  isActive?: boolean
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutLocationInput
 }
@@ -580,6 +608,7 @@ export type LocationUpdateWithoutAttendancesInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutLocationNestedInput
 }
@@ -591,6 +620,7 @@ export type LocationUncheckedUpdateWithoutAttendancesInput = {
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutLocationNestedInput
 }
@@ -642,6 +672,7 @@ export type LocationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  isActive?: boolean
   createdAt?: boolean
   users?: boolean | Prisma.Location$usersArgs<ExtArgs>
   attendances?: boolean | Prisma.Location$attendancesArgs<ExtArgs>
@@ -655,6 +686,7 @@ export type LocationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["location"]>
 
@@ -665,6 +697,7 @@ export type LocationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["location"]>
 
@@ -675,10 +708,11 @@ export type LocationSelectScalar = {
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }
 
-export type LocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "latitude" | "longitude" | "radius" | "createdAt", ExtArgs["result"]["location"]>
+export type LocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "latitude" | "longitude" | "radius" | "isActive" | "createdAt", ExtArgs["result"]["location"]>
 export type LocationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Location$usersArgs<ExtArgs>
   attendances?: boolean | Prisma.Location$attendancesArgs<ExtArgs>
@@ -700,6 +734,7 @@ export type $LocationPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     latitude: number
     longitude: number
     radius: number
+    isActive: boolean
     createdAt: Date
   }, ExtArgs["result"]["location"]>
   composites: {}
@@ -1132,6 +1167,7 @@ export interface LocationFieldRefs {
   readonly latitude: Prisma.FieldRef<"Location", 'Float'>
   readonly longitude: Prisma.FieldRef<"Location", 'Float'>
   readonly radius: Prisma.FieldRef<"Location", 'Int'>
+  readonly isActive: Prisma.FieldRef<"Location", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Location", 'DateTime'>
 }
     

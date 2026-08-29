@@ -91,6 +91,14 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!location.isActive) {
+      return NextResponse.json(
+        {
+          error: "Your assigned location is currently inactive",
+        },
+        { status: 403 }
+      );
+    }
     const distance = calculateDistance(
       latitude,
       longitude,

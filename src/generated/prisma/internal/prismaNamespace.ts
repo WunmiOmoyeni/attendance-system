@@ -701,6 +701,7 @@ export const LocationScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   radius: 'radius',
+  isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
 

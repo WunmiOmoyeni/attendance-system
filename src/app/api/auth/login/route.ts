@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         if (!user.isActive) {
             return NextResponse.json(
                 {
-                    error: "Your account has been deactivated",
+                    error: "Your account has been deactivated. Please contact an administrator.",
                 },
                 { status: 403 }
             );
