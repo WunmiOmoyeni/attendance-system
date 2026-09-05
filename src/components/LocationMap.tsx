@@ -6,6 +6,7 @@ import {
   MapContainer,
   Marker,
   TileLayer,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -46,6 +47,24 @@ function LocationMarker({
   return position ? <Marker position={position} /> : null;
 }
 
+function MapUpdater({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      map.setView([latitude, longitude], 15);
+    }
+  }, [latitude, longitude, map]);
+
+  return null;
+}
+
 export default function LocationMap({
   latitude,
   longitude,
@@ -61,6 +80,11 @@ export default function LocationMap({
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+
+      <MapUpdater
+        latitude={latitude}
+        longitude={longitude}
       />
 
       <LocationMarker

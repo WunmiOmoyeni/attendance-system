@@ -160,6 +160,31 @@ export default function AdminLocationsPage() {
         }
     };
 
+    const handleSearchAddress = async () => {
+        if (!searchQuery.trim()) {
+            return;
+        }
+
+        try {
+            setSearching(true);
+            setSearchResults([]);
+
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(searchQuery
+                )}`
+            );
+            if (!response.ok) {
+                throw new Error("Failed to search for address");
+            }
+            const data = await response.json();
+            setSearchResults(data);
+        } catch (error) {
+            console.error("Address search error:", error);
+        } finally {
+            setSearching(false);
+        }
+    };
+
     if (loading) {
         return (
             <main className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -267,6 +292,54 @@ export default function AdminLocationsPage() {
                                     />
                                 </div>
                             </div>
+
+                            <div className="mb-4">
+                                <label className="mb-1 block text-xs font-medium text-gray-600">
+                                    Search for location
+                                </label>
+
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="e.g. 12 Allen Avenue, Ikeja"
+                                        className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-black"
+                                    />
+                                    <button type="button"
+                                        onClick={handleSearchAddress}
+                                        disabled={searching}
+                                        className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+                                    >
+                                        {searching ? "Searching..." : "Search"}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {searchResults.length > 0 && (
+                                <div className="mb-4 overflow-hidden rounded-md border border-gray-200">
+                                    {searchResults.map((result, index) => (
+                                        <button
+                                            key={`${result.lat}-${result.lon}-${index}`}
+                                            type="button"
+                                            onClick={() => {
+                                                const lat = Number(result.lat);
+                                                const lon = Number(result.lon);
+
+                                                setLatitude(lat);
+                                                setLongitude(lon);
+                                                setAddress(result.display_name);
+
+                                                setSearchResults([]);
+                                                setSearchQuery(result.display_name);
+                                            }}
+                                            className="block w-full border-b border-gray-100 px-3 py-3 text-left text-sm hover:bg-gray-50 last:border-b-0"
+                                        >
+                                            {result.display_name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Map */}
                             <div className="mt-6">
