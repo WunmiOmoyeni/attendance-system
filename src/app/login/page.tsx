@@ -38,7 +38,11 @@ export default function LoginPage() {
         return;
       }
 
-      router.replace("/attendance");
+      if (data.user.role === "ADMIN") {
+        router.replace("/admin");
+      } else {
+        router.replace("/attendance");
+      }
     } catch (error) {
       console.error(error);
       setMessage("Something went wrong. Please try again.");
