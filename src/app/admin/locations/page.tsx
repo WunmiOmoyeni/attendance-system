@@ -170,13 +170,15 @@ export default function AdminLocationsPage() {
             setSearchResults([]);
 
             const response = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(searchQuery
-                )}`
+                `/api/geocode?q=${encodeURIComponent(searchQuery)}`
             );
-            if (!response.ok) {
-                throw new Error("Failed to search for address");
-            }
+
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to search for address");
+            }
+
             setSearchResults(data);
         } catch (error) {
             console.error("Address search error:", error);
@@ -184,6 +186,8 @@ export default function AdminLocationsPage() {
             setSearching(false);
         }
     };
+
+
 
     if (loading) {
         return (
@@ -194,13 +198,13 @@ export default function AdminLocationsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-gray-50">
+        <main className="min-h-screen bg-gray-50 text-black">
             {/* Header */}
             <header className="border-b bg-white">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">Attend.</h1>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-black">
                             Location Management
                         </p>
                     </div>
@@ -251,8 +255,8 @@ export default function AdminLocationsPage() {
                             </h3>
 
                             <p className="mt-1 text-sm text-gray-500">
-                                Enter the location details and click the map to select
-                                the exact attendance point.
+                                Search for an address above, select a result, then click 
+                                on the map to pinpoint the exact location.
                             </p>
                         </div>
 
@@ -328,10 +332,9 @@ export default function AdminLocationsPage() {
 
                                                 setLatitude(lat);
                                                 setLongitude(lon);
-                                                setAddress(result.display_name);
+                                                setAddress(searchQuery);
 
                                                 setSearchResults([]);
-                                                setSearchQuery(result.display_name);
                                             }}
                                             className="block w-full border-b border-gray-100 px-3 py-3 text-left text-sm hover:bg-gray-50 last:border-b-0"
                                         >
