@@ -39,7 +39,14 @@ export async function POST(request: Request) {
     const latitude = Number(body.latitude);
     const longitude = Number(body.longitude);
 
-    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    if (
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude) ||
+      latitude < -90 ||
+      latitude > 90 ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
       return NextResponse.json(
         {
           error: "Valid latitude and longitude are required",

@@ -36,6 +36,14 @@ export default function AdminUsersPage() {
     const [creating, setCreating] = useState(false);
     const [formMessage, setFormMessage] = useState("");
 
+    const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+    const [editName, setEditName] = useState("");
+    const [editEmail, setEditEmail] = useState("");
+    const [editLocationId, setEditLocationId] = useState("");
+
+    const [updating, setUpdating] = useState(false);
+    const [editMessage, setEditMessage] = useState("");
+
     useEffect(() => {
         const loadEmployees = async () => {
             try {
@@ -94,6 +102,77 @@ export default function AdminUsersPage() {
 
         loadEmployees();
     }, [router]);
+
+
+    const handleEditEmployee = async (
+        e: React.FormEvent
+    ) => {
+        e.preventDefault();
+
+        if (!editingEmployee) {
+            return;
+        }
+
+        setUpdating(true);
+        setEditMessage("");
+
+        try {
+            const response = await fetch(
+                `/api/admin/users/${editingEmployee.id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: editName,
+                        email: editEmail,
+                        locationId: editLocationId || null,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setEditMessage(
+                    data.error || "Failed to update employee."
+                );
+                return;
+            }
+
+            setEmployees((currentEmployees) =>
+                currentEmployees.map((employee) =>
+                    employee.id === editingEmployee.id
+                        ? data
+                        : employee
+                )
+            );
+
+            setEditingEmployee(null);
+            setEditMessage("");
+        } catch (error) {
+            console.error(error);
+
+            setEditMessage(
+                "Something went wrong while updating the employee."
+            );
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+
+    const startEditingEmployee = (employee: Employee) => {
+        setEditingEmployee(employee);
+
+        setEditName(employee.name);
+        setEditEmail(employee.email);
+        setEditLocationId(employee.location?.id || "");
+
+        setEditMessage("");
+    };
+
 
 
     const handleToggleStatus = async (
@@ -376,6 +455,112 @@ export default function AdminUsersPage() {
                 )}
 
 
+                {editingEmployee && (
+                    <div className="mb-8 rounded-2xl border bg-white p-6 shadow-sm">
+                        <div className="mb-6 flex items-start justify-between">
+                            <div>
+                                <h3 className="text-lg font-semibold">
+                                    Edit Employee
+                                </h3>
+
+                                <p className="mt-1 text-sm text-gray-500">
+                                    Update employee information and assigned location.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setEditingEmployee(null)}
+                                className="text-sm text-gray-500 hover:text-black"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+
+                        <form
+                            onSubmit={handleEditEmployee}
+                            className="space-y-5"
+                        >
+                            <div className="grid gap-5 md:grid-cols-2">
+                                {/* Name */}
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium">
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        value={editName}
+                                        onChange={(e) => setEditName(e.target.value)}
+                                        required
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-black"
+                                    />
+                                </div>
+
+                                {/* Email */}
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium">
+                                        Email
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        value={editEmail}
+                                        onChange={(e) => setEditEmail(e.target.value)}
+                                        required
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-black"
+                                    />
+                                </div>
+
+                                {/* Location */}
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium">
+                                        Assigned Location
+                                    </label>
+
+                                    <select
+                                        value={editLocationId}
+                                        onChange={(e) =>
+                                            setEditLocationId(e.target.value)
+                                        }
+                                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-black"
+                                    >
+                                        <option value="">
+                                            No location assigned
+                                        </option>
+
+                                        {locations.map((location) => (
+                                            <option
+                                                key={location.id}
+                                                value={location.id}
+                                            >
+                                                {location.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {editMessage && (
+                                <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                                    {editMessage}
+                                </div>
+                            )}
+
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={updating}
+                                    className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    {updating ? "Saving..." : "Save Changes"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
+
 
                 {/* Employee table */}
                 <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
@@ -472,11 +657,35 @@ export default function AdminUsersPage() {
 
 
                                             <td className="px-6 py-4">
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => startEditingEmployee(employee)}
+                                                        className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium hover:bg-gray-50"
+                                                    >
+                                                        Edit
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => handleToggleStatus(employee)}
+                                                        className={`rounded-lg px-3 py-2 text-xs font-medium ${employee.isActive
+                                                            ? "border border-red-200 text-red-600 hover:bg-red-50"
+                                                            : "border border-green-200 text-green-600 hover:bg-green-50"
+                                                            }`}
+                                                    >
+                                                        {employee.isActive ? "Deactivate" : "Activate"}
+                                                    </button>
+                                                </div>
+                                            </td>
+
+
+
+
+                                            <td className="px-6 py-4">
                                                 <button
                                                     onClick={() => handleToggleStatus(employee)}
                                                     className={`rounded-lg px-3 py-2 text-xs font-medium ${employee.isActive
-                                                            ? "border border-red-200 text-red-600 hover:bg-red-50"
-                                                            : "border border-green-200 text-green-600 hover:bg-green-50"
+                                                        ? "border border-red-200 text-red-600 hover:bg-red-50"
+                                                        : "border border-green-200 text-green-600 hover:bg-green-50"
                                                         }`}
                                                 >
                                                     {employee.isActive ? "Deactivate" : "Activate"}

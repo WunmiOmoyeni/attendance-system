@@ -1,3 +1,4 @@
+
 import { getCurrentUser } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 import { NextResponse } from "next/server";
@@ -26,49 +27,29 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!existingUser) {
+    if (!body.name || !body.email) {
       return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
+        { error: "Name and email are required" },
+        { status: 400 }
       );
     }
 
-    const { name, email, role, isActive, locationId } = body;
-
-    if (email && email !== existingUser.email) {
-      const emailExists = await prisma.user.findUnique({
-        where: {
-          email,
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: body.email,
+        NOT: {
+          id,
         },
-      });
+      },
+    });
 
-      if (emailExists) {
-        return NextResponse.json(
-          { error: "A user with this email already exists" },
-          { status: 409 }
-        );
-      }
-    }
-
-    if (locationId) {
-      const location = await prisma.location.findUnique({
-        where: {
-          id: locationId,
+    if (existingUser) {
+      return NextResponse.json(
+        {
+          error: "Another user already has this email",
         },
-      });
-
-      if (!location) {
-        return NextResponse.json(
-          { error: "Location not found" },
-          { status: 404 }
-        );
-      }
+        { status: 409 }
+      );
     }
 
     const user = await prisma.user.update({
@@ -76,13 +57,17 @@ export async function PATCH(
         id,
       },
       data: {
-        ...(name !== undefined && { name }),
-        ...(email !== undefined && { email }),
-        ...(role !== undefined && { role }),
-        ...(isActive !== undefined && { isActive }),
-        ...(locationId !== undefined && {
-          locationId: locationId || null,
-        }),
+        name: body.name,
+        email: body.email,
+        location: body.locationId
+          ? {
+              connect: {
+                id: body.locationId,
+              },
+            }
+          : {
+              disconnect: true,
+            },
       },
       select: {
         id: true,
@@ -90,14 +75,13 @@ export async function PATCH(
         email: true,
         role: true,
         isActive: true,
-        createdAt: true,
         location: true,
       },
     });
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("Update user error:", error);
+    console.error("Update employee error:", error);
 
     return NextResponse.json(
       { error: "Something went wrong" },
@@ -105,3 +89,4 @@ export async function PATCH(
     );
   }
 }
+
