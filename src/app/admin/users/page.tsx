@@ -665,15 +665,6 @@ export default function AdminUsersPage() {
                                                         Edit
                                                     </button>
 
-                                                    <button
-                                                        onClick={() => handleToggleStatus(employee)}
-                                                        className={`rounded-lg px-3 py-2 text-xs font-medium ${employee.isActive
-                                                            ? "border border-red-200 text-red-600 hover:bg-red-50"
-                                                            : "border border-green-200 text-green-600 hover:bg-green-50"
-                                                            }`}
-                                                    >
-                                                        {employee.isActive ? "Deactivate" : "Activate"}
-                                                    </button>
                                                 </div>
                                             </td>
 
